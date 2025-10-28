@@ -98,23 +98,29 @@ const FraudDetector = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--gradient-hero)] py-12 px-4">
-      <div className="max-width-6xl mx-auto">
-        <header className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <div className="p-4 rounded-2xl bg-primary/10 backdrop-blur">
-              <TrendingUp className="w-12 h-12 text-primary" />
+    <div className="min-h-screen bg-[var(--gradient-hero)] py-12 px-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+      
+      <div className="max-w-6xl mx-auto relative z-10">
+        <header className="text-center mb-12 animate-fade-in">
+          <div className="flex items-center justify-center mb-6">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-xl border border-primary/20 shadow-[var(--shadow-glow)] animate-glow-pulse">
+              <TrendingUp className="w-14 h-14 text-primary" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
             Fraud Detection System
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Advanced AI-powered credit card fraud detection. Upload CSV files or analyze individual transactions instantly.
           </p>
         </header>
 
-        <Card className="max-w-4xl mx-auto p-8 shadow-[var(--shadow-elevated)] border-border/50">
+        <Card className="max-w-4xl mx-auto p-8 shadow-[var(--shadow-elevated)] border border-primary/20 bg-[var(--gradient-card)] backdrop-blur-xl animate-scale-in">
           <Tabs defaultValue="csv" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
               <TabsTrigger value="csv" className="text-base">
@@ -127,15 +133,15 @@ const FraudDetector = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="csv" className="space-y-6">
-              <div className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:border-primary/50 transition-colors">
-                <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+            <TabsContent value="csv" className="space-y-6 animate-fade-in">
+              <div className="border-2 border-dashed border-primary/30 rounded-xl p-12 text-center hover:border-primary/60 hover:bg-primary/5 transition-all duration-300 group">
+                <Upload className="w-16 h-16 mx-auto mb-4 text-primary group-hover:scale-110 transition-transform duration-300" />
                 <Label htmlFor="csv-upload" className="cursor-pointer">
-                  <div className="text-lg font-semibold mb-2">Upload CSV File</div>
+                  <div className="text-lg font-semibold mb-2 text-foreground">Upload CSV File</div>
                   <p className="text-sm text-muted-foreground mb-4">
                     Click to browse or drag and drop your transaction data
                   </p>
-                  <Button type="button" variant="outline" className="mt-2">
+                  <Button type="button" className="mt-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg">
                     Choose File
                   </Button>
                 </Label>
@@ -153,24 +159,31 @@ const FraudDetector = () => {
             </TabsContent>
 
             <TabsContent value="manual">
-              <form onSubmit={handleManualSubmit} className="space-y-6">
+              <form onSubmit={handleManualSubmit} className="space-y-6 animate-fade-in">
                 <div className="space-y-2">
-                  <Label htmlFor="transaction-text">Transaction Details</Label>
+                  <Label htmlFor="transaction-text" className="text-base font-medium">Transaction Details</Label>
                   <Textarea
                     id="transaction-text"
                     placeholder="Enter transaction details here..."
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
-                    className="min-h-[200px]"
+                    className="min-h-[200px] bg-muted/50 border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none"
                     required
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-[var(--gradient-primary)] hover:opacity-90 text-lg py-6"
+                  className="w-full bg-gradient-to-r from-primary via-primary-glow to-accent hover:shadow-[var(--shadow-glow)] hover:scale-[1.02] text-lg py-7 font-semibold transition-all duration-300 disabled:opacity-50 disabled:hover:scale-100"
                   disabled={isAnalyzing}
                 >
-                  {isAnalyzing ? "Analyzing..." : "Analyze Transaction"}
+                  {isAnalyzing ? (
+                    <span className="flex items-center gap-2">
+                      <span className="animate-pulse">Analyzing</span>
+                      <span className="animate-bounce">...</span>
+                    </span>
+                  ) : (
+                    "Analyze Transaction"
+                  )}
                 </Button>
               </form>
             </TabsContent>
@@ -178,16 +191,17 @@ const FraudDetector = () => {
         </Card>
 
         {results.length > 0 && (
-          <div className="max-w-4xl mx-auto mt-8 space-y-4">
-            <h2 className="text-2xl font-bold mb-6">Analysis Results</h2>
+          <div className="max-w-4xl mx-auto mt-8 space-y-4 animate-fade-in">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Analysis Results</h2>
             {results.map((result, index) => (
               <Card 
                 key={index} 
-                className={`p-6 shadow-[var(--shadow-card)] border-2 ${
+                className={`p-6 shadow-[var(--shadow-elevated)] border-2 transition-all duration-300 hover:scale-[1.01] animate-scale-in ${
                   result.isFraud 
-                    ? "border-destructive/30 bg-destructive/5" 
-                    : "border-success/30 bg-success/5"
+                    ? "border-destructive/40 bg-gradient-to-br from-destructive/10 to-destructive/5 hover:border-destructive/60" 
+                    : "border-success/40 bg-gradient-to-br from-success/10 to-success/5 hover:border-success/60"
                 }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
