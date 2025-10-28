@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, FileText, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
@@ -18,12 +19,7 @@ interface TransactionResult {
 const FraudDetector = () => {
   const [results, setResults] = useState<TransactionResult[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [manualInput, setManualInput] = useState({
-    amount: "",
-    merchant: "",
-    location: "",
-    time: "",
-  });
+  const [manualInput, setManualInput] = useState("");
 
   const analyzeTransaction = (data: any): TransactionResult => {
     // Mock fraud detection logic
@@ -94,7 +90,7 @@ const FraudDetector = () => {
     setIsAnalyzing(true);
     
     setTimeout(() => {
-      const result = analyzeTransaction(manualInput);
+      const result = analyzeTransaction({ amount: manualInput, merchant: "", location: "", time: "" });
       setResults([result]);
       setIsAnalyzing(false);
       toast.success("Transaction analyzed");
@@ -158,49 +154,16 @@ const FraudDetector = () => {
 
             <TabsContent value="manual">
               <form onSubmit={handleManualSubmit} className="space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="amount">Transaction Amount ($)</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      step="0.01"
-                      placeholder="1250.00"
-                      value={manualInput.amount}
-                      onChange={(e) => setManualInput({ ...manualInput, amount: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="merchant">Merchant Name</Label>
-                    <Input
-                      id="merchant"
-                      placeholder="Online Store XYZ"
-                      value={manualInput.merchant}
-                      onChange={(e) => setManualInput({ ...manualInput, merchant: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      placeholder="New York, USA"
-                      value={manualInput.location}
-                      onChange={(e) => setManualInput({ ...manualInput, location: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="time">Transaction Time</Label>
-                    <Input
-                      id="time"
-                      type="time"
-                      value={manualInput.time}
-                      onChange={(e) => setManualInput({ ...manualInput, time: e.target.value })}
-                      required
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="transaction-text">Transaction Details</Label>
+                  <Textarea
+                    id="transaction-text"
+                    placeholder="Enter transaction details here..."
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                    className="min-h-[200px]"
+                    required
+                  />
                 </div>
                 <Button 
                   type="submit" 
