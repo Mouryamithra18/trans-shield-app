@@ -18,7 +18,8 @@ app.add_middleware(
 )
 
 # Load the trained model
-model = joblib.load("models/fraud_model.joblib")
+model = joblib.load("backend/models/fraud_model.joblib")
+
 
 # ✅ Expected columns (30 input features)
 EXPECTED_COLUMNS = [
