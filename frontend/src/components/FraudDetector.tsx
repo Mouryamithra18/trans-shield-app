@@ -23,7 +23,7 @@ const FraudDetector = () => {
 
   const analyzeTransaction = async (data: any): Promise<TransactionResult> => {
     try {
-        const response = await fetch("http://127.0.0.1:8000/predict", {
+        const response = await fetch("https://trans-shield-app-1.onrender.com/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: parseFloat(data.amount || "0"), time: parseInt(data.time || "0") }),
@@ -73,7 +73,7 @@ const FraudDetector = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch("http://127.0.0.1:8000/predict-file", {
+      const response = await fetch("https://trans-shield-app-1.onrender.com/predict-file", {
 
         method: 'POST',
         body: formData,
